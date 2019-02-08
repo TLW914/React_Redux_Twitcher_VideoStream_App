@@ -15,8 +15,9 @@ class StreamCreate extends React.Component {
     renderInput = (formProps) => {
         //console.log('props from renderInput from field component in render func', formProps)
         //console.log('meta property in renderInput', formProps.meta)
+        const className = `field ${formProps.meta.error && formProps.meta.touched ? 'error': '' }`
         return (
-            <div className="field">
+            <div className={className}>
             <label>{formProps.label}</label>
                 <input 
                     //shortcut version 
