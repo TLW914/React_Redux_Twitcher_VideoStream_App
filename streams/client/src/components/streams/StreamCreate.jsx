@@ -3,7 +3,8 @@ import { Field, reduxForm } from 'redux-form';
 
 class StreamCreate extends React.Component {
     renderInput(formProps){
-        console.log('props from field component in render func', formProps)
+        //console.log('props from renderInput from field component in render func', formProps)
+        //console.log('meta property in renderInput', formProps.meta)
         return (
             <div className="field">
             <label>{formProps.label}</label>
@@ -17,15 +18,22 @@ class StreamCreate extends React.Component {
                         // onChange={formProps.input.onChange} 
                         // value={formProps.input.value}
                 />
+                <div>{formProps.meta.error}</div>
             </div>
         );
     }
 
+    onSubmit(formValues){
+        console.log('form values formValue object in onSubmit method', formValues)
+    }
+
     render() {
-        console.log('props on reduxForm reducer', this.props)
+        //console.log('props on reduxForm', this.props)
         return (
         <div>
-            <form className="ui form">
+            {/* handleSubmit is callback function that is a property on reduxForm
+            pass in our own callback into handleSubmit */}
+            <form onSubmit={this.props.handleSubmit(this.onSubmit)}className="ui form">
                 {/* name property is required, need text input to appear, 
                 Field does not know how to render anything in DOM unless 
                 asign a prop to it as component or a function for the field to call 
@@ -35,14 +43,31 @@ class StreamCreate extends React.Component {
                  */}
                 <Field name="title" component={this.renderInput} label="Enter Title"/>
                 <Field name="description" component={this.renderInput} label="Enter Description"/>
+                <button className="ui button primary">Submit</button>
             </form>
         </div>
         );
     }
 }
 
+//define validation function for reduxForm
+const validate = (formValues) => {
+    //create empty errors object
+    //empty object informs redux that everything is okay
+    const errors = {};
+
+    if (!formValues.title){
+        errors.title = 'Please Enter a Title'
+    }
+    if (!formValues.description){
+        errors.description = 'Please Enter a Description'
+    }
+    return errors
+};
+
 // reduxForm works same way connect works--do not need reducers or map state to props - handles that
 // takes in configuration object
 export default reduxForm({
-    form: 'streamCreate'
+    form: 'streamCreate',
+    validate: validate
 })(StreamCreate);
