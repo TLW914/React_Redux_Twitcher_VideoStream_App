@@ -1,5 +1,7 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { createStream } from '../../actions/index.js';
 
 class StreamCreate extends React.Component {
     renderError(meta){
@@ -35,8 +37,11 @@ class StreamCreate extends React.Component {
         );
     }
 
-    onSubmit(formValues){
-        console.log('form values formValue object in onSubmit method', formValues)
+    onSubmit = (formValues) => {
+        //console.log('form values formValue object in onSubmit method', formValues)
+
+        //call action creator of createStream
+        this.props.createStream(formValues);
     }
 
     render() {
@@ -77,9 +82,28 @@ const validate = (formValues) => {
     return errors
 };
 
-// reduxForm works same way connect works--do not need reducers or map state to props - handles that
-// takes in configuration object
-export default reduxForm({
+const formWrapped = reduxForm({
     form: 'streamCreate',
     validate: validate
 })(StreamCreate);
+
+export default connect(null, { createStream })(formWrapped)
+
+
+
+    //alt version combined connect with redux form 
+
+        // export default connect(null, {createStream })(reduxForm({
+        //     form: 'streamCreate',
+        //     validate: validate
+        // })(StreamCreate));
+
+//prior to connect function
+// reduxForm works same way connect works--do not need reducers or map state to props - handles that
+// takes in configuration object
+
+// export default reduxForm({
+//     form: 'streamCreate',
+//     validate: validate
+// })(StreamCreate);
+
